@@ -16,7 +16,7 @@ topology:
       startup-config: startup-configs/sw1.cfg
     sw2:
       kind: nokia_srlinux
-      image: ghcr.io/nokia/srlinux
+      image: ghcr.io/nokia/srlinux:23.10.2
       mgmt-ipv4: 172.100.100.3
       mgmt-ipv6: 2001:172:100:100::3
       startup-config: startup-configs/sw2.cfg
