@@ -18,7 +18,7 @@ Une aide sur les commandes CLI de sr-linux est disponible [ici](srlinux_commands
 
 * Installer containerlab
 
-        [Documentation d'installation de Containerlab](https://containerlab.dev/install/#__tabbed_1_1)
+    [Documentation d'installation de Containerlab](https://containerlab.dev/install/#__tabbed_1_1)
 
 * Récupérer l'image SR-LINUX :
 
