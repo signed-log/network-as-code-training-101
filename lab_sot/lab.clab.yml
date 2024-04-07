@@ -1,0 +1,59 @@
+name: lab
+
+mgmt:
+  network: fixedips
+  ipv4-subnet: 172.100.100.0/24
+  ipv6-subnet: 2001:172:100:100::/80
+
+topology:
+  kinds:
+    ceos:
+      binds:
+        - ethmapping.json:/mnt/flash/EosIntfMapping.json:ro
+  nodes:
+    RTR1:
+      kind: ceos
+      image: ceos:4.30.5M
+      mgmt-ipv4: 172.100.100.2
+      mgmt-ipv6: 2001:172:100:100::2
+      startup-config: startup-configs/RTR1.cfg
+    RTR2:
+      kind: ceos
+      image: ceos:4.30.5M
+      mgmt-ipv4: 172.100.100.3
+      mgmt-ipv6: 2001:172:100:100::3
+      startup-config: startup-configs/RTR2.cfg
+    #RTR3:
+    #  kind: ceos
+    #  image: ceos:4.30.5M
+    #  mgmt-ipv4: 172.100.100.4
+    #  mgmt-ipv6: 2001:172:100:100::4
+    #  startup-config: startup-configs/RTR3.cfg
+    #RTR4:
+    #  kind: ceos
+    #  image: ceos:4.30.5M
+    #  mgmt-ipv4: 172.100.100.5
+    #  mgmt-ipv6: 2001:172:100:100::5
+    #  startup-config: startup-configs/RTR4.cfg
+    nautobot:
+      kind: linux
+      image: networktocode/nautobot-lab:2.1.4
+      mgmt-ipv4: 172.100.100.6
+      mgmt-ipv6: 2001:172:100:100::6
+      binds:
+        - workdir:/workdir
+        - nautobot.sql:/tmp/nautobot.sql
+      ports:
+        - 8000:8000
+    lab-mgmt:
+      kind: linux
+      image: lab-mgmt
+      mgmt-ipv4: 172.100.100.7
+      mgmt-ipv6: 2001:172:100:100::7
+      binds:
+      entrypoint: tail -f /dev/null
+  links:
+    - endpoints: ["RTR1:eth1", "RTR2:eth1"]
+    #- endpoints: ["RTR1:eth2", "RTR3:eth1"]
+    #- endpoints: ["RTR2:eth2", "RTR4:eth1"]
+    #- endpoints: ["RTR4:eth2", "RTR3:eth2"]

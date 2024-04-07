@@ -21,10 +21,6 @@
 
         docker import cEOS64-lab-4.30.5M.tar.xz ceos:4.30.5M
 
-* Récupérer l'image gNMIc :
-
-        docker pull ghcr.io/openconfig/gnmic:0.36.2
-
 ## 1) Lancement et accès à l'infrastructure
 
 Lancement des containeurs
@@ -37,8 +33,27 @@ Connexion SSH aux switchs:
 
 Lancement de la CLI gNMIc
 
-    docker run --network host --rm ghcr.io/openconfig/gnmic -a clab-lab_netconf-sw1:6030 --insecure -u admin -p admin capabilities
+    docker run --network host --rm ghcr.io/openconfig/gnmic -a clab-lab_gnmi-sw1:6030 --insecure -u admin -p admin capabilities
 
 ## 2) Découverte du protocole gNMI
 
 ### 2.1) Configuration du protocole gNMI sur sw1
+
+:question: Afficher la configuration gnmi sur sw1
+
+:question: Afficher l'état opérationnel du protocole gnmi sur sw1
+
+
+### 2.2) Utilisation du protocole gNMI
+
+:question: Récupérer le nom des interfaces sur sw1
+
+:question: Récupérer l'état opérationnel de l'interface ethernet1/1
+
+:question: Créer une souscription pour recevoir le nombre d'octets passé sur l'interface ethernet1/1 toutes les 10s
+
+:question: Créer une souscription pour recevoir toute changement d'état d'opérationnel des interfaces
+
+:info: Tester la réception des messages de souscription en shuttant l'interface sur un extrémité
+
+:question: Modifier l'état opérationnel de l'interface ethernet1/1

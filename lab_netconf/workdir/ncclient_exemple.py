@@ -1,5 +1,5 @@
 from ncclient import manager
-
+from xml.etree import ElementTree
 
 INTERFACE_CONFIG='''
 <interfaces>
@@ -29,7 +29,7 @@ with manager.connect(
     ) as eos:
 
     # Get and print one interface description
-    intf_config = eos.get_config(source="running", filter=("subtree", INTERFACE_CONFIG.format(intf_name="Ethernet1")))
+    intf_config = eos.get_config(source="running", filter=("subtree", INTERFACE_CONFIG.format(intf_name="Ethernet1/1")))
     intf_name = intf_config.data.find(".//interfaces/interface/config/name", namespaces=NS).text
     intf_description = intf_config.data.find(".//interfaces/interface/config/description", namespaces=NS).text
     print(f"{intf_name} - {intf_description}")

@@ -3,7 +3,7 @@ FROM alpine:3.18
 
 ARG ANSIBLE_CORE_VERSION=2.16.4
 ARG ANSIBLE_VERSION=9.3.0
-ARG ANSIBLE_LINT
+ARG GNMIC_VERSION=0.36.2
 ENV ANSIBLE_CORE_VERSION ${ANSIBLE_CORE_VERSION}
 ENV ANSIBLE_VERSION ${ANSIBLE_VERSION}
 
@@ -27,14 +27,17 @@ RUN apk --no-cache add \
     pip3 install --upgrade cryptography cffi && \
     pip3 install ansible-core==${ANSIBLE_CORE_VERSION} && \
     pip3 install ansible==${ANSIBLE_VERSION} && \
-    pip3 install jxmlease paramiko ncclient jmespath && \
+    pip3 install jxmlease paramiko ncclient jmespath xmltodict && \
     apk del build-dependencies && \
     rm -rf /var/cache/apk/* && \
     rm -rf /root/.cache/pip
 
+RUN pip3 install netutils
+
 RUN mkdir /workdir && \
     mkdir -p /etc/ansible && \
-    echo 'localhost' > /etc/ansible/hosts
+    echo 'localhost' > /etc/ansible/hosts && \
+    ansible-galaxy collection install networktocode.nautobot
 
 WORKDIR /workdir
 

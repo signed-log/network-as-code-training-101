@@ -1,5 +1,4 @@
-# topology documentation: http://containerlab.dev/lab-examples/two-srls/
-name: lab_netconf
+name: lab_gnmi
 
 mgmt:
   network: fixedips
@@ -7,6 +6,10 @@ mgmt:
   ipv6-subnet: 2001:172:100:100::/80
 
 topology:
+  kinds:
+    ceos:
+      binds:
+        - ethmapping.json:/mnt/flash/EosIntfMapping.json:ro
   nodes:
     sw1:
       kind: ceos
@@ -16,9 +19,11 @@ topology:
       startup-config: startup-configs/sw1.cfg
     sw2:
       kind: nokia_srlinux
-      image: ghcr.io/nokia/srlinux
+      image: ghcr.io/nokia/srlinux:23.10.2
       mgmt-ipv4: 172.100.100.3
       mgmt-ipv6: 2001:172:100:100::3
       startup-config: startup-configs/sw2.cfg
+
   links:
     - endpoints: ["sw1:eth1", "sw2:e1-1"]
+    - endpoints: ["sw1:eth2", "sw2:e1-2"]

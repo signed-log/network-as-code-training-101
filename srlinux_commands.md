@@ -9,3 +9,5 @@
     enter candidate
 
     set/delete *
+
+    commit now

@@ -1,0 +1,21 @@
+---
+- name: Define and enforce a configuration reference
+  hosts: all
+  connection: netconf
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: "python"
+    ansible_network_os: 'eos'
+    ansible_user: admin # TODO use clab SSH key
+    ansible_password: admin
+  tasks:
+
+    - name: Print host vars
+      debug:
+        msg: "{{ hostvars[inventory_hostname] }}"
+
+    - name: Get the current device config
+      netconf_get:
+        display: native
+        source: running
+      register: pre

@@ -94,9 +94,9 @@ Un outil utile pour explorer les modèles YANG openConfig : [OpenConfig schema p
 
 :question: Quelle est la requête pour récupérer la liste des utilisateurs ?
 
-:question: Quelle est la requête pour récupérer la configuration de l'interface ethernet1 ?
+:question: Quelle est la requête pour récupérer la configuration de l'interface Ethernet1/1 ?
 
-:question: Quelle est la requête pour récupérer l'état opérationnel de l'interface ethernet1 ?
+:question: Quelle est la requête pour récupérer l'état opérationnel de l'interface Ethernet1/1 ?
 
 :question: Quelle est la requête pour récupérer l'état opérationnel de la session BGP 192.168.1.1 dans la GRT ?
 
@@ -105,11 +105,11 @@ Un outil utile pour explorer les modèles YANG openConfig : [OpenConfig schema p
 :question: Quelle sont les requêtes nécessaire pour :
 
   * vérrouiller le datastore de configuration "candidate"
-  * modifier la description de l'interface "Ethernet1"
-  * récupérer la description de l'interface "Ethernet1" dans le datastore candidate
+  * modifier la description de l'interface "Ethernet1/1"
+  * récupérer la description de l'interface "Ethernet1/1" dans le datastore candidate
   * commit la modification
   * déverouiller le datastore de configuration "candidate"
-  * récupérer la description de l'interface "Ethernet1" dans le datastore running
+  * récupérer la description de l'interface "Ethernet1/1" dans le datastore running
 
 ### 2.5) Utilisation de python
 
@@ -118,7 +118,7 @@ On utilise en générale l'accès netconf via un shell que pour du debug. L'inte
 :question: écrire en python un petit script qui va effectuer les actions suivantes :
 
 1. récupérer la liste des interfaces avec leur statut et description
-2. configuer une nouvelle interface "Ethernet2"
+2. configuer une nouvelle interface "Ethernet1/2"
 3. récupérer la liste des interfaces avec leur statut et description
 
 La bibliothèque la plus utilisé en python pour faire du netconf est ncclient : [documentation](https://ncclient.readthedocs.io/en/latest/)

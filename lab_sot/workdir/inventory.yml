@@ -1,0 +1,18 @@
+---
+plugin: networktocode.nautobot.gql_inventory
+api_endpoint: http://172.100.100.6:8000
+token: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+query:
+  devices:
+    location: name
+    role: name
+    interfaces:
+      name:
+      ip_addresses: address
+    bgp_routing_instances:
+      endpoints:
+        autonomous_system: asn
+        peer:
+          routing_instance: 
+            device: name
+group_by: role.name
