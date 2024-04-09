@@ -41,7 +41,6 @@ topology:
       mgmt-ipv4: 172.100.100.6
       mgmt-ipv6: 2001:172:100:100::6
       binds:
-        - workdir:/workdir
         - nautobot.sql:/tmp/nautobot.sql
       ports:
         - 8000:8000
@@ -51,6 +50,7 @@ topology:
       mgmt-ipv4: 172.100.100.7
       mgmt-ipv6: 2001:172:100:100::7
       binds:
+        - workdir:/workdir
       entrypoint: tail -f /dev/null
   links:
     - endpoints: ["RTR1:eth1", "RTR2:eth1"]
