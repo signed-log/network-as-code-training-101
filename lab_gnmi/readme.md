@@ -1,4 +1,4 @@
-# Lab NETCONF
+# Lab gNMI
 
 
 ## Pré-requis :
@@ -29,7 +29,7 @@ Lancement des containeurs
 
 Connexion SSH aux switchs:
 
-    ssh admin@clab-lab_netconf-sw1
+    ssh admin@clab-lab_gnmi-sw1
 
 Lancement de la CLI gNMIc
 
