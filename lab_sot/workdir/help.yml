@@ -5,8 +5,8 @@
   become: true
   become_method: ansible.netcommon.enable
   vars:
-    ansible_connection: ansible.netcommon.httpapi
-    ansible_network_os: 'ansible.netcommon.restconf'
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_network_os: 'arista.eos.eos'
     ansible_user: admin
     ansible_password: admin
     method: "replaced"
