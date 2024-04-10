@@ -20,6 +20,12 @@
         config:
           hostname: "{{ name }}"
         state: "{{ method }}"
+    - name: Create interfaces
+      arista.eos.eos_l2_interfaces:
+        state: "{{ method }}"
+        config:
+          - name: "{{ item.name }}"
+      loop: "{{ hostvars[inventory_hostname].interfaces }}"
     - name: Set Interface config
       arista.eos.eos_l3_interfaces:
         state: "{{ method }}"
