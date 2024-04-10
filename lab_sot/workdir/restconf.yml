@@ -18,12 +18,14 @@
     - name: Create SSL Profile
       arista.eos.eos_command:
         commands:
+          - conf t
           - management security
           - ssl profile restconf
           - certificate restconf.crt key restconf.key
     - name: Enable RESTCONF
       arista.eos.eos_command:
         commands:
+          - conf t
           - management api restconf
           - transport https test
           - ssl profile restconf
