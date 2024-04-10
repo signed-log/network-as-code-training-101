@@ -15,23 +15,26 @@
     - name: Get hostvars from the inventory
       ansible.builtin.debug:
         var: hostvars[inventory_hostname]
-    - name: See if Copilot was right
-      ansible.builtin.debug:
-        msg: >-
+    - name: Get the loopback0 IP address of all other devices
+      ansible.builtin.set_fact:
+        bgp_neighbors: >-
           {{ groups['all']
           | reject('equalto', inventory_hostname)
           | map('extract', hostvars, 'interfaces')
           | map('selectattr', 'name', 'equalto', 'loopback0')
-          | map('first')
-          | map('first')
-          | map('extract', 'ip_addresses')
-          | map('first')
-          | map('extract', 'address')
-          | map('format', 'peer: {}')
-          | list
+          | flatten
+          | first
+          | dict2items
+          | selectattr('key', 'equalto', 'ip_addresses')
+          | map(attribute='value')
+          | flatten
+          | first
+          | dict2items
+          | selectattr('key', 'equalto', 'address')
+          | map(attribute='value')
+          | map('regex_replace', '^', 'peer=')
+          | community.routeros.list_to_dict
           }}
-    - name: End play
-      ansible.builtin.meta: end_play
     - name: Set the hostname
       arista.eos.eos_hostname:
         config:
@@ -57,14 +60,5 @@
         state: "{{ method }}"
         config:
           as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
-          neighbor: >-
-            {{ groups['all']
-            | reject('equalto', inventory_hostname)
-            | map('extract', hostvars, 'interfaces')
-            | map('selectattr', 'name', 'equalto', 'loopback0')
-            | map('map', 'ip_addresses')
-            | map('first')
-            | map('first')
-            | map('extract', 'address')
-            | map('format', 'peer: {}')
-            | list }}
+          neighbor: "{{ bgp_neighbors }}"
+      when: hostvars[inventory_hostname].bgp_routing_instances | length > 0
