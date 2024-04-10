@@ -39,10 +39,9 @@
       arista.eos.eos_bgp_global:
         state: "{{ method }}"
         config:
-          as_number: "{{ item.1.autonomous_system.as_number }}"
+          as_number: "{{ item.autonomous_system.as_number }}"
           # Make a list of all the neighbors using map to generate the appropriate keys
-          neighbor: "{{ item.1.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
+          neighbor: "{{ item.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
       with_nested:
-        - "{{ hostvars[inventory_hostname].bgp_routing_instances }}"
-        - "{{ item.0.endpoints }}"
-      when: item.1.peer | length > 0
+        - "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints }}"
+      when: item | length == 1
