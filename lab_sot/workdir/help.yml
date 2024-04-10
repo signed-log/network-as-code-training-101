@@ -69,13 +69,14 @@
               - address: "{{ item.ip_addresses.0.address }}"
       loop: "{{ hostvars[inventory_hostname].interfaces }}"
       when: item.ip_addresses | length > 0
-    - name: Delete the BGP config
-      arista.eos.eos_bgp_global:
-        state: "purged"
     - name: Set BGP config (assuming a single AS number for all peers)
       arista.eos.eos_bgp_global:
-        state: "merged"
+        state: "rendered"
         config:
           as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
           neighbor: "{{ bgp_neighbors }}"
       when: hostvars[inventory_hostname].bgp_routing_instances | length > 0
+      register: bgp_config
+    - name: Print BGP config
+      ansible.builtin.debug:
+        var: bgp_config
