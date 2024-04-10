@@ -15,10 +15,6 @@
       arista.eos.eos_eapi:
         enable_http: true
         enable_https: true
-    - name: Enable eAPI
-      arista.eos.eos_eapi:
-        enable_http: true
-        enable_https: true
 
 - name: Define and enforce a configuration reference
   hosts: all
