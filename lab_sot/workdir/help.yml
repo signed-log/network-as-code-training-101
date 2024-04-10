@@ -70,12 +70,9 @@
           neighbor: "{{ bgp_neighbors }}"
       when: hostvars[inventory_hostname].bgp_routing_instances | length > 0
       register: bgp_config
-    - name: Print BGP config
-      ansible.builtin.debug:
-        var: bgp_config
     - name: Set BGP config (module failed)
       arista.eos.eos_command:
-        commands: "{{ ['conf t'] + bgp_config.rendered }}"
+        commands: "{{ ['configure session'] + bgp_config.rendered + ['exit'] }}"
     - name: End task
       ansible.builtin.meta: end_play
     - name: OSPF
