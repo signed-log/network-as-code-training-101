@@ -9,7 +9,7 @@
     ansible_user: admin
     ansible_password: admin
     ansible_become_method: enable
-    method: "replace"
+    method: "replaced"
   tasks:
     - name: Get hostvars from the inventory
       ansible.builtin.debug:
@@ -34,6 +34,6 @@
         config:
           as_number: "{{ item.asn }}"
           # Make a list of all the neighbors using map to generate the appropriate keys
-          neighbor: "{{ item.peer | map('extract', 'peer_address') | map('format', 'peer: {}') | list }}"
+          neighbor: "{{ item.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
       loop: "{{ hostvars[inventory_hostname].bgp_routing_instances }}"
       when: item.peer | length > 0

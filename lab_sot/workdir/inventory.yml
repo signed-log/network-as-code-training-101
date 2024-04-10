@@ -15,7 +15,7 @@ query:
       endpoints:
         autonomous_system: asn
         peer:
-          source_ip: peer_address
+          source_ip: address
           routing_instance:
             device: name
 group_by: role.name
