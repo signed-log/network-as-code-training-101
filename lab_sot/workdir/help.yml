@@ -62,6 +62,8 @@
               - address: "{{ item.ip_addresses.0.address }}"
             ipv6:
               - address: "{{ item.ip_addresses.1.address | default('') }}"
+      register: ip_config
+      ignore_errors: ip_config.stderr.find('Incomplete command') >= 0
       loop: "{{ hostvars[inventory_hostname].interfaces }}"
       when: item.ip_addresses | length > 0
     - name: Set BGP config (assuming a single AS number for all peers)
