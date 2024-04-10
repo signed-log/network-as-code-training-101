@@ -22,6 +22,13 @@
           | reject('equalto', inventory_hostname)
           | map('extract', hostvars, 'interfaces')
           | map('selectattr', 'name', 'equalto', 'loopback0')
+          | map('first')
+          | map('first')
+          | map('extract', 'ip_addresses')
+          | map('first')
+          | map('extract', 'address')
+          | map('format', 'peer: {}')
+          | list
           }}
     - name: End play
       ansible.builtin.meta: end_play
