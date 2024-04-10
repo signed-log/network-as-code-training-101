@@ -22,7 +22,7 @@
           | reject('equalto', inventory_hostname)
           | map('extract', hostvars, 'interfaces')
           | map('selectattr', 'name', 'equalto', 'loopback0')
-          | map('map', 'ip_addresses')
+          | map(attribute='ip_addresses')
           | map('first')
           | map('first')
           | map('extract', 'address')
