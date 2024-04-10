@@ -6,10 +6,10 @@
   become_method: ansible.netcommon.enable
   vars:
     ansible_connection: ansible.netcommon.network_cli
-    ansible_network_os: 'arista.eos.eos'
+    ansible_network_os: arista.eos.eos
     ansible_user: admin
     ansible_password: admin
-    method: "replaced"
+    method: replaced
   tasks:
     - name: Get hostvars from the inventory
       ansible.builtin.debug:
@@ -17,6 +17,9 @@
     - name: Set AS number variable
       ansible.builtin.set_fact:
         as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
+    - name: Get all the physical interfaces
+      ansible.builtin.set_fact:
+        interfaces: "{{ hostvars[inventory_hostname].interfaces | selectattr('name', 'search', 'Ethernet') | list }}"
     - name: Get the loopback0 IP address of all other devices
       ansible.builtin.set_fact:
         bgp_neighbors: >-
@@ -39,16 +42,6 @@
           | community.routeros.list_to_dict
           | combine({'remote_as': as_number})
           }}]
-    - name: RESTCONF Set the hostname
-      ansible.netcommon.restconf_get:
-        path: /system/config/hostname
-      register: eos_hostname
-      delegate_to: localhost
-    - name: Print the hostname
-      ansible.builtin.debug:
-        var: eos_hostname
-    - name: End play
-      ansible.builtin.meta: end_play
     - name: Set the hostname
       arista.eos.eos_hostname:
         config:
@@ -71,7 +64,7 @@
       when: item.ip_addresses | length > 0
     - name: Set BGP config (assuming a single AS number for all peers)
       arista.eos.eos_bgp_global:
-        state: "rendered"
+        state: rendered
         config:
           as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
           neighbor: "{{ bgp_neighbors }}"
@@ -80,3 +73,20 @@
     - name: Print BGP config
       ansible.builtin.debug:
         var: bgp_config
+    - name: Set BGP config (module failed)
+      arista.eos.eos_command:
+        commands: "{{ ['conf t'] + bgp_config.rendered }}"
+    - name: OSPF
+      arista.eos.eos_ospfv2:
+        state: "{{ method }}"
+        config:
+          - processes:
+              router_id: >-
+                {{ hostvars[inventory_hostname].interfaces
+                | map('selectattr', 'name', 'equalto', 'loopback0').0.ip_addresses.0.address
+                | map('regex_replace', '/.*$', '') }}
+              networks:
+                area: "{{ ospfarea }}"
+                network: "{{ ospfnetwork }}"
+    - name: 
+    - name:

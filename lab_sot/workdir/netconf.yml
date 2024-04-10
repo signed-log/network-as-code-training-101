@@ -7,10 +7,10 @@
   connection: ansible.netcommon.netconf
   vars:
     ansible_connection: ansible.netcommon.netconf
-    ansible_network_os: 'ansible.netcommon.netconf'
+    ansible_network_os: ansible.netcommon.netconf
     ansible_user: admin
     ansible_password: admin
-    method: "replace"
+    method: replace
   tasks:
     - name: Get hostvars from the inventory
       ansible.builtin.debug:

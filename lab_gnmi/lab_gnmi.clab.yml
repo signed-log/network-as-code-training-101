@@ -1,3 +1,4 @@
+---
 name: lab_gnmi
 
 mgmt:
@@ -25,5 +26,5 @@ topology:
       startup-config: startup-configs/sw2.cfg
 
   links:
-    - endpoints: ["sw1:eth1", "sw2:e1-1"]
-    - endpoints: ["sw1:eth2", "sw2:e1-2"]
+    - endpoints: [sw1:eth1, sw2:e1-1]
+    - endpoints: [sw1:eth2, sw2:e1-2]

@@ -6,11 +6,11 @@
   become_method: ansible.netcommon.enable
   vars:
     ansible_connection: ansible.netcommon.network_cli
-    ansible_python_interpreter: "python"
-    ansible_network_os: 'arista.eos.eos'
+    ansible_python_interpreter: python
+    ansible_network_os: arista.eos.eos
     ansible_user: admin
     ansible_password: admin
-    method: "replaced"
+    method: replaced
   tasks:
     - name: Generate HTTPS certificates
       arista.eos.eos_command:

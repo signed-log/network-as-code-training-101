@@ -1,3 +1,4 @@
+---
 name: lab
 
 mgmt:
@@ -53,7 +54,7 @@ topology:
       binds:
       entrypoint: tail -f /dev/null
   links:
-    - endpoints: ["RTR1:eth1", "RTR2:eth1"]
+    - endpoints: [RTR1:eth1, RTR2:eth1]
     #- endpoints: ["RTR1:eth2", "RTR3:eth1"]
     #- endpoints: ["RTR2:eth2", "RTR4:eth1"]
     #- endpoints: ["RTR4:eth2", "RTR3:eth2"]
