@@ -4,6 +4,7 @@
   gather_facts: false
   become: true
   become_method: ansible.netcommon.enable
+  connection: ansible.netcommon.netconf
   vars:
     ansible_connection: ansible.netcommon.netconf
     ansible_network_os: 'ansible.netcommon.netconf'
@@ -44,11 +45,13 @@
         target: candidate
         default_operation: "{{ method }}"
         xml: "{{ lookup('template', 'hostname.xml.j2') }}"
+        lock: never
     - name: Set IP configuration
       ansible.netcommon.netconf_config:
         target: candidate
         default_operation: "{{ method }}"
         xml: "{{ lookup('template', 'ip_interface.xml.j2') }}"
+        lock: never
     - name: Commit
       ansible.netcommon.netconf_config:
         target: running
