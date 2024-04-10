@@ -35,11 +35,11 @@
           | dict2items
           | selectattr('key', 'equalto', 'address')
           | map(attribute='value')
+          | map('regex_replace', '/.*$', '')
           | map('regex_replace', '^', 'peer=')
           | community.routeros.list_to_dict
-          | map('combine', {'remote_as': as_number})
+          | combine({'remote_as': as_number})
           }}]
-    - name: 
     - name: Set the hostname
       arista.eos.eos_hostname:
         config:
