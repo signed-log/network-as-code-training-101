@@ -15,6 +15,21 @@
     - name: Get hostvars from the inventory
       ansible.builtin.debug:
         var: hostvars[inventory_hostname]
+    - name: See if Copilot was right
+      ansible.builtin.debug:
+        msg: >-
+          {{ groups['all']
+          | reject('equalto', inventory_hostname)
+          | map('extract', hostvars, 'interfaces')
+          | map('selectattr', 'name', 'equalto', 'loopback0')
+          | map('map', 'ip_addresses')
+          | map('first')
+          | map('first')
+          | map('extract', 'address')
+          | map('format', 'peer: {}')
+          | list }}
+    - name: End play
+      ansible.builtin.meta: end_play
     - name: Set the hostname
       arista.eos.eos_hostname:
         config:
@@ -35,13 +50,19 @@
               - address: "{{ item.ip_addresses.0.address }}"
       loop: "{{ hostvars[inventory_hostname].interfaces }}"
       when: item.ip_addresses | length > 0
-    - name: Set BGP config
+    - name: Set BGP config (assuming a single AS number for all peers)
       arista.eos.eos_bgp_global:
         state: "{{ method }}"
         config:
-          as_number: "{{ item.autonomous_system.as_number }}"
-          # Make a list of all the neighbors using map to generate the appropriate keys
-          neighbor: "{{ item.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
-      with_nested:
-        - "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints }}"
-      when: item | length == 1
+          as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
+          neighbor: >-
+            {{ groups['all']
+            | reject('equalto', inventory_hostname)
+            | map('extract', hostvars, 'interfaces')
+            | map('selectattr', 'name', 'equalto', 'loopback0')
+            | map('map', 'ip_addresses')
+            | map('first')
+            | map('first')
+            | map('extract', 'address')
+            | map('format', 'peer: {}')
+            | list }}
