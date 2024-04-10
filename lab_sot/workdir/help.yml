@@ -6,7 +6,6 @@
   become_method: ansible.netcommon.enable
   vars:
     ansible_connection: ansible.netcommon.httpapi
-    ansible_python_interpreter: "python"
     ansible_network_os: 'ansible.netcommon.restconf'
     ansible_user: admin
     ansible_password: admin
@@ -44,6 +43,7 @@
       ansible.netcommon.restconf_get:
         path: /system/config/hostname
       register: eos_hostname
+      delegate_to: localhost
     - name: Print the hostname
       ansible.builtin.debug:
         var: eos_hostname

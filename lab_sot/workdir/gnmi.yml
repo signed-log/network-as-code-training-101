@@ -18,3 +18,20 @@
           - "conf t"
           - "management api gnmi"
           - "transport grpc default"
+    - name: Save the configuration
+      arista.eos.eos_command:
+        commands:
+          - "write memory"
+
+- name: Set configuration
+  hosts: all
+  gather_facts: false
+  become: true
+  become_method: ansible.netcommon.enable
+  vars:
+    ansible_connection: ansible.netcommon.grpc
+    ansible_python_interpreter: "python"
+    ansible_network_os: 'arista.eos.eos'
+    ansible_user: admin
+    ansible_password: admin
+    method: "replaced"
