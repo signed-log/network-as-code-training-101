@@ -1,0 +1,22 @@
+<config>
+  <interfaces>
+    <interface>
+      <name>{{ item.interface }}</name>
+      <description>{{ item.description }}</description>
+      <subinterfaces>
+        <subinterface>
+          <ipv4>
+            <addresses>
+              <address>
+                <config>
+                  <ip>{{ item.ip }}</ip>
+                  <prefix-length>{{ item.prefix }}</prefix-length>
+                </config>
+              </address>
+            </addresses>
+          </ipv4>
+        </subinterface>
+      </subinterfaces>
+    </interface>
+  </interfaces>
+</config>

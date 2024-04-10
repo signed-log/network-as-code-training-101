@@ -1,0 +1,20 @@
+---
+- name: Enable gNMI
+  hosts: all
+  gather_facts: false
+  become: true
+  become_method: ansible.netcommon.enable
+  vars:
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_python_interpreter: "python"
+    ansible_network_os: 'arista.eos.eos'
+    ansible_user: admin
+    ansible_password: admin
+    method: "replaced"
+  tasks:
+    - name: Enable gNMI
+      arista.eos.eos_command:
+        commands:
+          - "conf t"
+          - "management api gnmi"
+          - "transport grpc default"

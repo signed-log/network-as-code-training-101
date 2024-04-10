@@ -1,0 +1,55 @@
+---
+- name: Define and enforce a configuration reference
+  hosts: all
+  gather_facts: false
+  become: true
+  become_method: ansible.netcommon.enable
+  vars:
+    ansible_connection: ansible.netcommon.netconf
+    ansible_network_os: 'ansible.netcommon.netconf'
+    ansible_user: admin
+    ansible_password: admin
+    method: "replace"
+  tasks:
+    - name: Get hostvars from the inventory
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
+    - name: Set AS number variable
+      ansible.builtin.set_fact:
+        as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
+    - name: Get the loopback0 IP address of all other devices
+      ansible.builtin.set_fact:
+        bgp_neighbors: >-
+          [{{ groups['all']
+          | reject('equalto', inventory_hostname)
+          | map('extract', hostvars, 'interfaces')
+          | map('selectattr', 'name', 'equalto', 'loopback0')
+          | flatten
+          | first
+          | dict2items
+          | selectattr('key', 'equalto', 'ip_addresses')
+          | map(attribute='value')
+          | flatten
+          | first
+          | dict2items
+          | selectattr('key', 'equalto', 'address')
+          | map(attribute='value')
+          | map('regex_replace', '/.*$', '')
+          | map('regex_replace', '^', 'peer=')
+          | community.routeros.list_to_dict
+          | combine({'remote_as': as_number})
+          }}]
+    - name: Set hostname
+      ansible.netcommon.netconf_config:
+        target: candidate
+        default_operation: "{{ method }}"
+        xml: "{{ lookup('template', 'hostname.xml.j2') }}"
+    - name: Set IP configuration
+      ansible.netcommon.netconf_config:
+        target: candidate
+        default_operation: "{{ method }}"
+        xml: "{{ lookup('template', 'ip_interface.xml.j2') }}"
+    - name: Commit
+      ansible.netcommon.netconf_config:
+        target: running
+        commit: true
