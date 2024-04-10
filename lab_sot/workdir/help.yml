@@ -24,7 +24,6 @@
           | map('selectattr', 'name', 'equalto', 'loopback0')
           | map(attribute='ip_addresses')
           | map('first')
-          | map('first')
           | map('extract', 'address')
           | map('format', 'peer: {}')
           | list }}
