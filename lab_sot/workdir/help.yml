@@ -41,6 +41,6 @@
         config:
           as_number: "{{ item.asn }}"
           # Make a list of all the neighbors using map to generate the appropriate keys
-          neighbor: "{{ item.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
+          neighbor: "{{ item.endpoints.0.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
       loop: "{{ hostvars[inventory_hostname].bgp_routing_instances }}"
-      when: item.peer | length > 0
+      when: item.endpoints.0.peer | length > 0
