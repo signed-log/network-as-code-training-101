@@ -76,6 +76,8 @@
     - name: Set BGP config (module failed)
       arista.eos.eos_command:
         commands: "{{ ['conf t'] + bgp_config.rendered }}"
+    - name: End task
+      ansible.builtin.meta: end_play
     - name: OSPF
       arista.eos.eos_ospfv2:
         state: "{{ method }}"
@@ -88,5 +90,3 @@
               networks:
                 area: "{{ ospfarea }}"
                 network: "{{ ospfnetwork }}"
-    - name: 
-    - name:
