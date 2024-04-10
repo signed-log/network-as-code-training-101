@@ -62,7 +62,7 @@
       when: item.ip_addresses | length > 0
     - name: Delete the BGP config
       arista.eos.eos_bgp_global:
-        state: "deleted"
+        state: "purged"
     - name: Set BGP config (assuming a single AS number for all peers)
       arista.eos.eos_bgp_global:
         state: "merged"
