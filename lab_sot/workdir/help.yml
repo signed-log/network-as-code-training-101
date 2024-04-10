@@ -63,9 +63,13 @@
             ipv6:
               - address: "{{ item.ip_addresses.1.address | default('') }}"
       register: ip_config
-      ignore_errors: "{{ 'Incomplete command' in ip_config.stderr }}"
+      ignore_errors: true
       loop: "{{ hostvars[inventory_hostname].interfaces }}"
       when: item.ip_addresses | length > 0
+    - name: Fail if command error does not contain 'Incomplete command'
+      ansible.builtin.fail:
+        msg: "Command failed with unexpected error: {{ ip_config.stderr }}"
+      when: ip_config.failed and 'Incomplete command' not in ip_config.stderr
     - name: Set BGP config (assuming a single AS number for all peers)
       arista.eos.eos_bgp_global:
         state: rendered
