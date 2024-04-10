@@ -19,7 +19,7 @@
         as_number: "{{ hostvars[inventory_hostname].bgp_routing_instances.0.endpoints.0.autonomous_system.asn }}"
     - name: Get all the physical interfaces
       ansible.builtin.set_fact:
-        interfaces: "{{ hostvars[inventory_hostname].interfaces | selectattr('name', 'search', 'Ethernet') | list }}"
+        phy_interfaces: "{{ hostvars[inventory_hostname].interfaces | selectattr('name', 'search', 'Ethernet') | list }}"
     - name: Get the loopback0 IP address of all other devices
       ansible.builtin.set_fact:
         bgp_neighbors: >-
@@ -60,6 +60,8 @@
           - name: "{{ item.name }}"
             ipv4:
               - address: "{{ item.ip_addresses.0.address }}"
+            ipv6:
+              - address: "{{ item.ip_addresses.1.address | default('') }}"
       loop: "{{ hostvars[inventory_hostname].interfaces }}"
       when: item.ip_addresses | length > 0
     - name: Set BGP config (assuming a single AS number for all peers)
