@@ -1,21 +1,39 @@
 ---
 - name: Define and enforce a configuration reference
   hosts: all
-  connection: netconf
-  gather_facts: no
+  gather_facts: false
   vars:
+    ansible_connection: ansible.netcommon.network_cli
     ansible_python_interpreter: "python"
-    ansible_network_os: 'eos'
-    ansible_user: admin # TODO use clab SSH key
+    ansible_network_os: 'arista.eos.eos'
+    ansible_user: admin
     ansible_password: admin
+    ansible_become_method: enable
+    method: "replace"
   tasks:
-
-    - name: Print host vars
-      debug:
-        msg: "{{ hostvars[inventory_hostname] }}"
-
-    - name: Get the current device config
-      netconf_get:
-        display: native
-        source: running
-      register: pre
+    - name: Get hostvars from the inventory
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
+    - name: Set the hostname
+      arista.eos.eos_hostname:
+        config:
+          hostname: "{{ name }}"
+        state: "{{ method }}"
+    - name: Set Interface config
+      arista.eos.eos_l3_interfaces:
+        state: "{{ method }}"
+        config:
+          - name: "{{ item.name }}"
+            ipv4:
+              - address: "{{ item.ip_addresses.0.address }}"
+      loop: "{{ hostvars[inventory_hostname].interfaces }}"
+      when: item.ip_addresses | length > 0
+    - name: Set BGP config
+      arista.eos.eos_bgp_global:
+        state: "{{ method }}"
+        config:
+          as_number: "{{ item.asn }}"
+          # Make a list of all the neighbors using map to generate the appropriate keys
+          neighbor: "{{ item.peer | map('extract', 'peer_address') | map('format', 'peer: {}') | list }}"
+      loop: "{{ hostvars[inventory_hostname].bgp_routing_instances }}"
+      when: item.peer | length > 0

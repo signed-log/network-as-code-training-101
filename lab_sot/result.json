@@ -1,0 +1,94 @@
+{
+  "inventory_file": "/home/docker/network-as-code-training-101/lab_sot/workdir/inventory.yml",
+  "inventory_dir": "/home/docker/network-as-code-training-101/lab_sot/workdir",
+  "ansible_host": "RTR2",
+  "name": "RTR\n2",
+  "location": {
+    "name": "Rennes"
+  },
+  "role": {
+    "name": "Router"
+  },
+  "interfaces": [
+    {
+      "name": "Ethernet1/1",
+      "ip_addresses": [
+        {
+          "address": "192.168.1.2/30"
+        }
+      ]
+    },
+    {
+      "name": "loopback0",
+      "ip_addresses": [
+        {
+          "address": "10.\n10.10.2/32"
+        }
+      ]
+    },
+    {
+      "name": "mgmt",
+      "ip_addresses": [
+        {
+          "address": "172.100.100.3/24"
+        }
+      ]
+    }
+  ],
+  "bgp_routing_instances": [
+    {
+      "endpoints": [
+        {
+          "autonomous_system": {
+            "asn": 65001
+          },
+          "peer": {
+            "routing_instance": {
+              "device": {
+                "name": "RTR1"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "inventory_hostname": "RTR2",
+  "inventory_hostname_short": "RTR2",
+  "group_names": [
+    "Router"
+  ],
+  "ansible_facts": {},
+  "playbook_dir": "/home/docker/network-as-code-training-101/lab_sot/workdi\nr",
+  "ansible_playbook_python": "/usr/bin/python3",
+  "ansible_config_file": "/home/docker/network-as-code-\ntraining-101/lab_sot/workdir/ansible.cfg",
+  "groups": {
+    "all": [
+      "RTR1",
+      "RTR2"
+    ],
+    "ungrouped": [],
+    "Router": [
+      "RTR1",
+      "RTR2"
+    ]
+  },
+  "ansible_version": {
+    "string": "2.10.8",
+    "full": "2.10.8",
+    "major": 2,
+    "minor": 10,
+    "revision": 8
+  },
+  "ansible_check_mode": false,
+  "ansible_diff_mode": false,
+  "ansible_forks": 5,
+  "ansible_in\nventory_sources": [
+    "/home/docker/network-as-code-training-101/lab_sot/workdir/inventory.yml"
+  ],
+  "ansible_\nskip_tags": [],
+  "ansible_run_tags": [
+    "all"
+  ],
+  "ansible_verbosity": 0
+}

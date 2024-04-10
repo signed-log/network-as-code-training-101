@@ -10,9 +10,12 @@ query:
       name:
       ip_addresses: address
     bgp_routing_instances:
+      router_id:
+        host:
       endpoints:
         autonomous_system: asn
         peer:
-          routing_instance: 
+          source_ip: peer_address
+          routing_instance:
             device: name
 group_by: role.name
