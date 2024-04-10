@@ -47,13 +47,13 @@
         config:
           hostname: "{{ name }}"
         state: "{{ method }}"
-    - name: Create interfaces
+    - name: Make sure interface exist
       arista.eos.eos_l2_interfaces:
         state: "{{ method }}"
         config:
           - name: "{{ item.name }}"
       loop: "{{ hostvars[inventory_hostname].interfaces }}"
-    - name: Set Interface config
+    - name: Set IP addresses
       arista.eos.eos_l3_interfaces:
         state: "{{ method }}"
         config:
@@ -68,8 +68,9 @@
       when: item.ip_addresses | length > 0
     - name: Fail if command error does not contain 'Incomplete command'
       ansible.builtin.fail:
-        msg: "Command failed with unexpected error: {{ ip_config.stderr }}"
-      when: ip_config.failed and 'Incomplete command' not in ip_config.stderr
+        msg: "Command failed with unexpected error: {{ item.module_stderr }}"
+      when: item.failed and 'Incomplete command' not in item.module_stderr
+      loop: "{{ ip_config.results }}"
     - name: Set BGP config (assuming a single AS number for all peers)
       arista.eos.eos_bgp_global:
         state: rendered
@@ -80,11 +81,11 @@
       register: bgp_config
     - name: Set BGP config (module failed)
       arista.eos.eos_command:
-        commands: "{{ ['configure session'] + bgp_config.rendered + ['exit'] }}"
+        commands: "{{ ['configure session'] + bgp_config.rendered + ['commit'] }}"
     - name: End task
       ansible.builtin.meta: end_play
     - name: OSPF
-      arista.eos.eos_ospfv2:
+      arista.eos.eos_ospfv3:
         state: "{{ method }}"
         config:
           - processes:
