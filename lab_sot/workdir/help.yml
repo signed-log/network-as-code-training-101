@@ -1,11 +1,32 @@
 ---
-- name: Define and enforce a configuration reference
+- name: Enable eAPI
   hosts: all
   gather_facts: false
   become: true
   become_method: ansible.netcommon.enable
   vars:
     ansible_connection: ansible.netcommon.network_cli
+    ansible_python_interpreter: "python"
+    ansible_network_os: 'arista.eos.eos'
+    ansible_user: admin
+    ansible_password: admin
+  tasks:
+    - name: Enable eAPI
+      arista.eos.eos_eapi:
+        enable_http: true
+        enable_https: true
+    - name: Enable eAPI
+      arista.eos.eos_eapi:
+        enable_http: true
+        enable_https: true
+
+- name: Define and enforce a configuration reference
+  hosts: all
+  gather_facts: false
+  become: true
+  become_method: ansible.netcommon.enable
+  vars:
+    ansible_connection: ansible.netcommon.httpapi
     ansible_python_interpreter: "python"
     ansible_network_os: 'arista.eos.eos'
     ansible_user: admin
