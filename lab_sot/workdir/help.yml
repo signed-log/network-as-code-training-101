@@ -44,5 +44,5 @@
           neighbor: "{{ item.1.peer | map('extract', 'source_ip.address') | map('format', 'peer: {}') | list }}"
       with_nested:
         - "{{ hostvars[inventory_hostname].bgp_routing_instances }}"
-        - "{{ item.endpoints }}"
+        - "{{ item.0.endpoints }}"
       when: item.1.peer | length > 0
